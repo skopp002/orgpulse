@@ -27,8 +27,9 @@ public class  OrgCrawler {
                 links.add(URL);
 
                 Document document = Jsoup.connect(URL).get();
-                Elements linksOnPage = document.select("a[href]");
+                Elements linksOnPage = document.select("a[href^=*.org]");
 
+                depth++;
                 depth++;
                 for (Element page : linksOnPage) {
                     getPageLinks(page.attr("abs:href"), depth);
