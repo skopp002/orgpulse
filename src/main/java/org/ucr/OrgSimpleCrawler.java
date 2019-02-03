@@ -1,4 +1,4 @@
-package org.ucr.cs242;
+package org.ucr;
 
 
 import org.jsoup.Jsoup;
@@ -6,17 +6,14 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
-public class  OrgCrawler {
+public class  OrgSimpleCrawler {
     private static final int MAX_DEPTH = 10;
     private HashSet<String> links;
 
-    public OrgCrawler() {
+    public OrgSimpleCrawler() {
         links = new HashSet();
     }
 
@@ -28,8 +25,6 @@ public class  OrgCrawler {
 
                 Document document = Jsoup.connect(URL).get();
                 Elements linksOnPage = document.select("a[href^=*.org]");
-
-                depth++;
                 depth++;
                 for (Element page : linksOnPage) {
                     getPageLinks(page.attr("abs:href"), depth);
@@ -41,6 +36,6 @@ public class  OrgCrawler {
     }
 
     public static void main(String[] args) {
-        new OrgCrawler().getPageLinks("https://www.wango.org/", 0);
+        new OrgSimpleCrawler().getPageLinks("https://www.wikipedia.org/", 0);
     }
 }
