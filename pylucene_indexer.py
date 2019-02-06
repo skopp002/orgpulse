@@ -2,12 +2,38 @@ import lucene, json
 from org.apache.lucene.document import Document, Field, FieldType, StringField, TextField
 from org.apache.lucene.index import IndexWriterConfig, IndexWriter
 from org.apache.lucene.analysis.standard import StandardAnalyzer
+import glob
+
+#awk '{ sub("\r$", ""); print }' tweets.json > tweets_tweaked.json
+#specify the directory in which the tweets_tweaked.json exists
+
+tweets=[]
+json_direc = input("Enter the relative path of the JSON files: ")
+for filename in glob.iglob(json_direc + '**/*.json', recursive=True):
+    try:
+      print("Filename is", filename)
+      with open(filename) as f:
+        for line in f:
+           tweet=json.loads(line)
+           tweets.append(tweet)
+    except:
+        continue
+
+for tweet in tweets:
+    ids = [tweet['id_str'] for tweet in tweets if 'id_str' in tweet]
+    text = [tweet['text'] for tweet in tweets if 'text' in tweet]
+    lang = [tweet['lang'] for tweet in tweets if 'lang' in tweet]
+    geo = [tweet['geo'] for tweet in tweets if 'geo' in tweet]
+    place = [tweet['place'] for tweet in tweets if 'place' in tweet]
+    print(ids, text, lang, geo, place)
+
+
 # this was just what I was using to access the .json file from my desktop, a direct input of the directory may not
 # really be the best idea. The open() and json.load functions output a dictionary value, test_dict a direct copy paste
 # of the output of these functions from a small test .json file I downloaded to use for testing
-# json_direc = input("Enter the Directory of the JSON file: ")
-# with open(json_direc) as file:
-# data = json.load(file)
+#
+
+
 test_dict = {'error_message': 'You must use an API key to authenticate each request to Google Maps Platform APIs. For additional information, please refer to http://g.co/dev/maps-no-account', 'results': [], 'status': 'REQUEST_DENIED'}
 lucene.initVM(vmargs=['-Djava.awt.headless=true'])
 index = Document()
